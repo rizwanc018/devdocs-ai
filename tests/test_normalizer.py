@@ -1,18 +1,47 @@
-from devdocs_ai.config.path import RAW_DATA_DIR
-from devdocs_ai.ingestion.normalizer import normalize_text
-from devdocs_ai.ingestion.pdf_loader import load_pdf
+from devdocs_ai.ingestion.normalizer import normalize_chunks
 
-# pdf_file = Path("data/raw/First Steps - FastAPI.pdf")
-pdf_file = RAW_DATA_DIR / "First Steps - FastAPI.pdf"
 
-pages = load_pdf(pdf_file)
+def test_remove_document_title():
+    chunks = [
+        {
+            "chunk_id": "c0",
+            "text": "FastAPI Learn Tutorial - User Guide",
+            "section_path": [],
+        },
+        {
+            "chunk_id": "c1",
+            "text": "# Query Parameters\n\nSome documentation.",
+            "section_path": ["Query Parameters"],
+        },
+    ]
 
-for page in pages[:2]:
-    normalized_text = normalize_text(page["text"])
+    result = normalize_chunks(chunks)
 
-    print(f"\nPage: {page['page']}")
-    print(f"Original length: {len(page['text'])}")
-    print(f"Normalized length: {len(normalized_text)}")
+    assert len(result) == 1
+    assert result[0]["chunk_id"] == "c1"
 
-    print("\nNormalized text:")
-    print(normalized_text[:500])
+
+def test_preserve_meaningful_content_without_section():
+    chunks = [
+        {
+            "chunk_id": "c0",
+            "text": "Welcome to this documentation.",
+            "section_path": [],
+        }
+    ]
+
+    result = normalize_chunks(chunks)
+
+    assert len(result) == 1
+
+
+def test_remove_empty_chunks():
+    chunks = [
+        {
+            "chunk_id": "c0",
+            "text": "   \n\n  ",
+            "section_path": [],
+        }
+    ]
+
+    assert normalize_chunks(chunks) == []

@@ -1,17 +1,14 @@
 from pathlib import Path
 
+from devdocs_ai.config.path import RAW_DATA_DIR
 from devdocs_ai.ingestion.pdf_loader import load_pdf
 
-pdf_files = Path("data/raw").glob("*.pdf")
+for pdf_file in Path(RAW_DATA_DIR).glob("*.pdf"):
+    chunks = load_pdf(pdf_file)
 
-for pdf_file in pdf_files:
-    print(f"pdf_file: {pdf_file}")
+    print(f"\n{'=' * 70}")
+    print(f"Total chunks: {len(chunks)}")
 
-    pages = load_pdf(pdf_file)
-
-    print(f"Document: {pdf_file.name}")
-    print(f"Total extracted pages: {len(pages)}")
-
-    if pages:
-        print(f"First page: {pages[0]['page']}")
-        print(f"Extracted text:\n{pages[0]['text'][:300]}")
+    for chunk in chunks[:5]:
+        print("=" * 60)
+        print(chunk)
