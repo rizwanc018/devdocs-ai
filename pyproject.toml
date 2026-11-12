@@ -12,7 +12,10 @@ dependencies = [
     "ipykernel>=7.4.0",
     "lancedb>=0.41.0",
     "numpy>=2.5.4",
+    "openai>=3.49.0",
+    "pydantic>=2.14.3",
     "pymupdf>=2.1",
+    "python-dotenv>=1.2.4",
     "sentence-transformers>=6.3.0",
     "transformers>=5.22.2",
 ]
