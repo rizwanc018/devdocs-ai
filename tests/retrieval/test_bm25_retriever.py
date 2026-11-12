@@ -1,5 +1,6 @@
-from devdocs_ai.retrieval.bm25 import load_bm25_index
 from devdocs_ai.retrieval.bm25_retriever import bm25_retriever
+
+from devdocs_ai.retrieval.bm25 import load_bm25_index
 
 
 def main():

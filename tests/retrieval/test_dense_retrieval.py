@@ -1,4 +1,4 @@
-from devdocs_ai.retrieval.dense_retriever import dense_search
+from devdocs_ai.retrieval.dense import dense_search
 from devdocs_ai.retrieval.embeddings import load_embedding_model
 from devdocs_ai.retrieval.vector_store import (
     TABLE_NAME,
