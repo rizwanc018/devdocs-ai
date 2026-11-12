@@ -15,6 +15,10 @@ def bm25_retriever(query: str, retriever: bm25s.BM25, top_k: int = 5) -> list[di
     retrieved_chunks = []
 
     for chunk, score in zip(results[0], scores[0]):
+        score = float(score)
+        if score <= 0:
+            continue
+
         retrieved_chunks.append(
             {
                 **chunk,
