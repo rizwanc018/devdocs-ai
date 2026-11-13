@@ -23,10 +23,17 @@ def prepare_records(chunks: list[dict], embeddings: np.ndarray) -> list[dict]:
     records = []
 
     for chunk, embedding in zip(chunks, embeddings):
+        owner_id = chunk.get("owner_id")
+
+        if not isinstance(owner_id, str) or not owner_id.strip():
+            raise ValueError(f"Chunk {chunk.get('chunk_id')} has no valid owner_id.")
+
         records.append(
             {
                 "chunk_id": chunk["chunk_id"],
                 "document_id": chunk["document_id"],
+                "owner_id": chunk["owner_id"],
+                "workspace_id": chunk.get("workspace_id"),
                 "text": chunk["text"],
                 "source": chunk["source"],
                 "page_start": chunk.get("page_start"),
@@ -59,6 +66,8 @@ def create_vector_table(db, records: list[dict], table_name: str = TABLE_NAME):
         [
             pa.field("chunk_id", pa.string()),
             pa.field("document_id", pa.string()),
+            pa.field("owner_id", pa.string(), nullable=False),
+            pa.field("workspace_id", pa.string()),
             pa.field("text", pa.string()),
             pa.field("source", pa.string()),
             pa.field("page_start", pa.int64()),

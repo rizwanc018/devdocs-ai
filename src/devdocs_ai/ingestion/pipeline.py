@@ -8,9 +8,9 @@ from devdocs_ai.ingestion.validation import validate_chunk
 
 def process_pdf(
     file_path: str | Path,
+    owner_id: str,
     max_tokens: int = 400,
 ) -> list[dict]:
-    """Extract, normalize, enrich and validate PDF chunks."""
 
     file_path = Path(file_path)
 
@@ -34,6 +34,7 @@ def process_pdf(
             file_path=file_path,
             chunk_index=index,
             metadata=raw_chunk,
+            owner_id=owner_id,
         )
 
         # Combine text and metadata

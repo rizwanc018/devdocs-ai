@@ -6,12 +6,16 @@ def build_chunk_metadata(
     file_path: str | Path,
     chunk_index: int,
     metadata: dict,
+    owner_id: str,
 ) -> dict:
 
     file_path = Path(file_path)
 
     if chunk_index < 0:
         raise ValueError("chunk_index cannot be negative")
+
+    if not isinstance(owner_id, str) or not owner_id.strip():
+        raise ValueError("owner_id must be a non-empty string")
 
     # Create a normalized document identifier
     document_id = re.sub(
@@ -26,6 +30,8 @@ def build_chunk_metadata(
     return {
         "chunk_id": f"{document_id}-{chunk_index:04d}",
         "document_id": document_id,
+        "owner_id": owner_id,
+        "workspace_id": None,
         "source": file_path.name,
         "page_start": metadata.get("page_start"),
         "page_end": metadata.get("page_end"),

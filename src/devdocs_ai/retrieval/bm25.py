@@ -4,10 +4,18 @@ from devdocs_ai.config.path import BM25_INDEXES_DIR
 
 
 def build_bm25_index(chunks: list[dict]):
+
     if not chunks:
         raise ValueError("Cannot build BM25 index from empty chunks.")
 
-    texts = [chunk["text"] for chunk in chunks]
+    texts = []
+    for chunk in chunks:
+        owner_id = chunk.get("owner_id")
+
+        if not isinstance(owner_id, str) or not owner_id.strip():
+            raise ValueError(f"Chunk {chunk.get('chunk_id')} has no valid owner_id.")
+
+        texts.append(chunk["text"])
 
     corpus_tokens = bm25s.tokenize(texts, stopwords="en")
     retriever = bm25s.BM25(corpus=chunks)
