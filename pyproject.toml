@@ -10,6 +10,7 @@ requires-python = ">=3.14"
 dependencies = [
     "arize-phoenix>=21.0.0",
     "bm25s>=0.3.16",
+    "fastapi>=0.162.5",
     "ipykernel>=7.4.0",
     "lancedb>=0.41.0",
     "numpy>=2.5.4",
@@ -17,11 +18,14 @@ dependencies = [
     "openinference-instrumentation-openai>=0.1.73",
     "opentelemetry-exporter-otlp-proto-http>=1.45.2",
     "opentelemetry-sdk>=1.45.2",
+    "pwdlib[argon2]>=0.3.1",
     "pydantic>=2.14.3",
+    "pyjwt>=2.15.1",
     "pymupdf>=2.1",
     "python-dotenv>=1.2.4",
     "sentence-transformers>=6.3.0",
     "transformers>=5.22.2",
+    "uvicorn[standard]>=0.54.0",
 ]
 
 [project.scripts]

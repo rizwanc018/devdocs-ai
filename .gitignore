@@ -12,5 +12,7 @@ wheels/
 
 # Indexes
 indexes/
+data/auth
+
 
 note.md
