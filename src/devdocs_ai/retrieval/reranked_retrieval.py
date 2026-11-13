@@ -1,5 +1,9 @@
+from opentelemetry import trace
+
 from devdocs_ai.retrieval.hybrid import hybrid_retriever
 from devdocs_ai.retrieval.reranker import rerank_results
+
+tracer = trace.get_tracer(__name__)
 
 
 def reranked_retriever(
@@ -27,11 +31,28 @@ def reranked_retriever(
         metadata_filters=metadata_filters,
     )
 
-    results = rerank_results(
-        query=query,
-        chunks=candidates,
-        reranker=reranker,
-        top_k=top_k,
-    )
+    with tracer.start_as_current_span("reranking") as span:
+        span.set_attribute(
+            "rag.input_chunk_ids", [chunk["chunk_id"] for chunk in candidates]
+        )
+        span.set_attribute(
+            "rag.input_rrf_scores", [float(chunk["rrf_score"]) for chunk in candidates]
+        )
+
+        results = rerank_results(
+            query=query,
+            chunks=candidates,
+            reranker=reranker,
+            top_k=top_k,
+        )
+        span.set_attribute("rag.result_count", len(results))
+        span.set_attribute(
+            "rag.chunk_ids",
+            [chunk["chunk_id"] for chunk in results],
+        )
+        span.set_attribute(
+            "rag.reranker_scores",
+            [float(chunk["reranker_score"]) for chunk in results],
+        )
 
     return results

@@ -1,3 +1,7 @@
+from opentelemetry import trace
+
+tracer = trace.get_tracer(__name__)
+
 SYSTEM_PROMPT = """
                 You are a technical documentation assistant.
 
@@ -19,19 +23,33 @@ SYSTEM_PROMPT = """
 
 
 def build_context(chunks: list[dict]) -> str:
-    context_parts = []
+    with tracer.start_as_current_span("context_construction") as span:
+        context_parts = []
 
-    for chunk in chunks:
-        chunk_context = f"""
-                        Chunk ID: {chunk["chunk_id"]}
-                        Source: {chunk.get("source", "Unknown")}
-                        Page: {chunk.get("page_start", "Unknown")}
+        for chunk in chunks:
+            chunk_context = f"""
+Chunk ID: {chunk["chunk_id"]}
+Source: {chunk.get("source", "Unknown")}
+Page: {chunk.get("page_start", "Unknown")}
 
-                        Content:
-                        {chunk["text"]}
-                        """
-        context_parts.append(chunk_context)
-    return "\n\n---\n\n".join(context_parts)
+Content:
+{chunk["text"]}
+"""
+            context_parts.append(chunk_context)
+
+        context = "\n\n---\n\n".join(context_parts)
+
+        span.set_attribute("rag.context_chunk_count", len(chunks))
+        span.set_attribute(
+            "rag.context_chunk_ids",
+            [chunk["chunk_id"] for chunk in chunks],
+        )
+        span.set_attribute("rag.context_length", len(context))
+
+        # Capture the exact context sent to the LLM.
+        span.set_attribute("input.value", context)
+
+        return context
 
 
 def build_user_prompt(query: str, chunks: list[dict]) -> str:
