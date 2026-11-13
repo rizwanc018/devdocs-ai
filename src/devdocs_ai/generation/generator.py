@@ -53,6 +53,7 @@ def generate_answer(
         )
 
         message = response.choices[0].message
+        usage = response.usage
 
         if message.refusal:
             span.set_attribute("llm.refusal", True)
@@ -63,6 +64,7 @@ def generate_answer(
 
         generated = message.parsed
 
+        span.set_attribute("llm.token.usage", usage)
         span.set_attribute("output.value", generated.answer)
         span.set_attribute(
             "rag.cited_chunk_ids",
