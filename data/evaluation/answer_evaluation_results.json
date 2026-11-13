@@ -1,0 +1,181 @@
+[
+    {
+        "question": "How can I define query parameters in FastAPI?",
+        "should_abstain": false,
+        "answer": "In FastAPI, any function parameters that are not part of the path parameters are automatically interpreted as query parameters when declared in your endpoint functions. You can define query parameters by simply adding them as function parameters with Python types, and FastAPI will convert and validate them accordingly. For example, in a function like `async def read_item(skip: int = 0, limit: int = 10)`, `skip` and `limit` are query parameters with default values. Optional query parameters can be declared by setting their default to `None`. You can also define required query parameters by not providing a default value, making them mandatory in the request URL. FastAPI supports multiple query parameters, optional parameters, and parameters with default values. Additionally, you can combine path parameters, query parameters, and request bodies in a single endpoint, and FastAPI will properly extract each from the request context.",
+        "sources": [
+            {
+                "chunk_id": "query-parameters-fastapi-0001",
+                "source": "Query Parameters - FastAPI.pdf",
+                "page_start": 1,
+                "page_end": 2,
+                "section_path": [
+                    "Query Parameters"
+                ]
+            },
+            {
+                "chunk_id": "query-parameters-fastapi-0003",
+                "source": "Query Parameters - FastAPI.pdf",
+                "page_start": 3,
+                "page_end": 3,
+                "section_path": [
+                    "Query Parameters",
+                    "Optional parameters"
+                ]
+            },
+            {
+                "chunk_id": "query-parameters-fastapi-0006",
+                "source": "Query Parameters - FastAPI.pdf",
+                "page_start": 4,
+                "page_end": 5,
+                "section_path": [
+                    "Query Parameters",
+                    "Multiple path and query parameters"
+                ]
+            },
+            {
+                "chunk_id": "query-parameters-fastapi-0008",
+                "source": "Query Parameters - FastAPI.pdf",
+                "page_start": 6,
+                "page_end": 7,
+                "section_path": [
+                    "Query Parameters",
+                    "Required query parameters"
+                ]
+            },
+            {
+                "chunk_id": "request-body-fastapi-0013",
+                "source": "Request Body - FastAPI.pdf",
+                "page_start": 10,
+                "page_end": 11,
+                "section_path": [
+                    "Request Body",
+                    "Request body + path + query parameters"
+                ]
+            }
+        ],
+        "retrieved_chunk_ids": [
+            "query-parameters-fastapi-0001",
+            "request-body-fastapi-0013",
+            "query-parameters-fastapi-0006",
+            "query-parameters-fastapi-0003",
+            "query-parameters-fastapi-0008"
+        ],
+        "evaluation": {
+            "faithfulness": 5,
+            "answer_relevance": 5,
+            "citation_correctness": 5,
+            "context_relevance": 5,
+            "reasoning": "The generated answer correctly states that non-path function parameters are interpreted as query parameters in FastAPI, with examples of default values making them optional, parameters without defaults being required, and the possibility to combine query, path, and body parameters in the same endpoint. All these points are directly supported by the retrieved and cited documentation, which covers these exact details with code examples and explanations. The citations accurately correspond to the claims made, and the retrieved context is relevant and sufficient for this question.",
+            "abstention_handling_correct": true
+        }
+    },
+    {
+        "question": "How can I define optional query parameters?",
+        "should_abstain": false,
+        "answer": "You can define optional query parameters in FastAPI by setting their default value to `None` in the function signature. For example, defining a parameter as `q: str | None = None` makes `q` an optional query parameter with a default value of `None`. If the client does not provide this parameter in the request, it will be `None` inside the function. FastAPI automatically distinguishes between path parameters and query parameters based on their declaration.",
+        "sources": [
+            {
+                "chunk_id": "query-parameters-fastapi-0003",
+                "source": "Query Parameters - FastAPI.pdf",
+                "page_start": 3,
+                "page_end": 3,
+                "section_path": [
+                    "Query Parameters",
+                    "Optional parameters"
+                ]
+            }
+        ],
+        "retrieved_chunk_ids": [
+            "query-parameters-fastapi-0003",
+            "query-parameters-fastapi-0002",
+            "query-parameters-fastapi-0001",
+            "request-body-fastapi-0005",
+            "query-parameters-fastapi-0007"
+        ],
+        "evaluation": {
+            "faithfulness": 5,
+            "answer_relevance": 5,
+            "citation_correctness": 5,
+            "context_relevance": 5,
+            "reasoning": "The answer correctly explains that to define optional query parameters in FastAPI, you set the parameter default to None, supported explicitly by chunk query-parameters-fastapi-0003. The sample code and explanation in that chunk matches the claim and example given in the answer. The answer also addresses the question fully and directly. The citation is accurate and correctly supports the claims. The retrieved context is fully relevant and sufficient for the question. Thus, all scores are 5.",
+            "abstention_handling_correct": true
+        }
+    },
+    {
+        "question": "What is OAuth2PasswordBearer?",
+        "should_abstain": false,
+        "answer": "OAuth2PasswordBearer is a class provided by FastAPI to implement OAuth2 authentication using the Password flow with a Bearer token. It defines a security scheme where a client obtains a token by sending a username and password to a specific URL (`tokenUrl`), and then uses that token as a Bearer token in the Authorization header to access secure endpoints. This class inherits from `fastapi.security.oauth2.OAuth2` and integrates with FastAPI's OpenAPI schema and automatic API documentation. It can be used as a dependency in FastAPI routes to require and extract the token.",
+        "sources": [
+            {
+                "chunk_id": "security-first-steps-fastapi-0009",
+                "source": "Security - First Steps - FastAPI.pdf",
+                "page_start": 7,
+                "page_end": 7,
+                "section_path": [
+                    "Security - First Steps",
+                    "FastAPI's **`OAuth2PasswordBearer"
+                ]
+            },
+            {
+                "chunk_id": "security-first-steps-fastapi-0014",
+                "source": "Security - First Steps - FastAPI.pdf",
+                "page_start": 11,
+                "page_end": 11,
+                "section_path": [
+                    "Security - First Steps",
+                    "FastAPI's **`OAuth2PasswordBearer",
+                    "Use it",
+                    "Technical Details"
+                ]
+            },
+            {
+                "chunk_id": "security-first-steps-fastapi-0013",
+                "source": "Security - First Steps - FastAPI.pdf",
+                "page_start": 9,
+                "page_end": 10,
+                "section_path": [
+                    "Security - First Steps",
+                    "FastAPI's **`OAuth2PasswordBearer",
+                    "Use it"
+                ]
+            }
+        ],
+        "retrieved_chunk_ids": [
+            "security-first-steps-fastapi-0014",
+            "security-first-steps-fastapi-0009",
+            "security-first-steps-fastapi-0008",
+            "security-first-steps-fastapi-0012",
+            "security-first-steps-fastapi-0013"
+        ],
+        "evaluation": {
+            "faithfulness": 5,
+            "answer_relevance": 5,
+            "citation_correctness": 5,
+            "context_relevance": 5,
+            "reasoning": "The answer accurately explains what OAuth2PasswordBearer is according to the retrieved context. It covers the purpose of OAuth2PasswordBearer as a FastAPI class enabling OAuth2 with password flow and bearer token, explains the use of tokenUrl to obtain tokens, the use of bearer tokens in Authorization header, its inheritance and integration with OpenAPI schema, and its usage as a dependency. Each claim is supported by the cited documentation chunks. The retrieved chunks are relevant and sufficient to address the question, providing both conceptual and technical details. All citations correctly support the related claims in the answer. The assistant did not abstain and correctly answered based on the documentation provided.",
+            "abstention_handling_correct": true
+        }
+    },
+    {
+        "question": "How does PostgreSQL handle database transactions?",
+        "should_abstain": true,
+        "answer": "The provided documentation context does not contain information on how PostgreSQL handles database transactions, so I cannot answer your question based on the available documentation.",
+        "sources": [],
+        "retrieved_chunk_ids": [
+            "security-first-steps-fastapi-0002",
+            "middleware-fastapi-0007",
+            "security-first-steps-fastapi-0007",
+            "middleware-fastapi-0003",
+            "security-first-steps-fastapi-0015"
+        ],
+        "evaluation": {
+            "faithfulness": 5,
+            "answer_relevance": 5,
+            "citation_correctness": 5,
+            "context_relevance": 1,
+            "reasoning": "The user's question about PostgreSQL transactions is not addressed by the retrieved documentation, which is mostly about FastAPI middleware, security, and authorization. The assistant correctly states that the provided documentation does not contain information to answer the question on PostgreSQL transactions. Since it correctly abstains due to lack of relevant context, the faithfulness, answer relevance, and citation correctness are all high. However, the context relevance is low because the retrieved chunks are unrelated to the question topic. The assistant also appropriately handles abstention, so abstention_handling_correct is true.",
+            "abstention_handling_correct": true
+        }
+    }
+]

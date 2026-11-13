@@ -1,0 +1,27 @@
+[
+    {
+        "question": "How can I define query parameters in FastAPI?",
+        "expected_answer_points": [
+            "Non-path function parameters are interpreted as query parameters",
+            "Query parameters can have default values",
+            "Parameters without defaults are required"
+        ]
+    },
+    {
+        "question": "How can I define optional query parameters?",
+        "expected_answer_points": [
+            "Set the parameter default to None to make it optional"
+        ]
+    },
+    {
+        "question": "What is OAuth2PasswordBearer?",
+        "expected_answer_points": [
+            "The answer should explain OAuth2PasswordBearer based on the Security documentation"
+        ]
+    },
+    {
+        "question": "How does PostgreSQL handle database transactions?",
+        "expected_answer_points": [],
+        "should_abstain": true
+    }
+]
