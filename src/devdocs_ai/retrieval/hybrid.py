@@ -1,3 +1,4 @@
+import bm25s
 from opentelemetry import trace
 
 from devdocs_ai.retrieval.bm25 import bm25_retriever
@@ -12,7 +13,8 @@ def hybrid_retriever(
     query: str,
     model,
     table,
-    bm25,
+    bm25: bm25s.BM25,
+    owner_id: str,
     top_k: int = 5,
     dense_candidates: int = 10,
     bm25_candidates: int = 10,
@@ -25,7 +27,11 @@ def hybrid_retriever(
 
     with tracer.start_as_current_span("dense_retrieval") as span:
         dense_results = dense_search(
-            query=query, model=model, table=table, top_k=dense_candidates
+            query=query,
+            model=model,
+            table=table,
+            owner_id=owner_id,
+            top_k=dense_candidates,
         )
         span.set_attribute("rag.query", query)
         span.set_attribute("rag.result_count", len(dense_results))
@@ -35,7 +41,7 @@ def hybrid_retriever(
         )
     with tracer.start_as_current_span("bm25_retrieval") as span:
         bm25_results = bm25_retriever(
-            query=query, retriever=bm25, top_k=bm25_candidates
+            query=query, retriever=bm25, owner_id=owner_id, top_k=bm25_candidates
         )
         span.set_attribute("rag.query", query)
         span.set_attribute("rag.result_count", len(bm25_results))

@@ -1,15 +1,4 @@
-from devdocs_ai.ingestion.normalizer import normalize_text
+from devdocs_ai.retrieval.bm25 import load_bm25_index
 
-sample = """
-    # FastAPI
-
-    Hello World.
-
-
-    def greet():
-        print("Hello")
-"""
-
-normalized = normalize_text(sample)
-
-print(normalized)
+bm25 = load_bm25_index()
+bm25.scores["num_docs"]

@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sentence_transformers import SentenceTransformer
 
 from devdocs_ai.retrieval.embeddings import (
@@ -7,7 +9,7 @@ from devdocs_ai.retrieval.embeddings import (
 
 
 def dense_search(
-    query: str, model: SentenceTransformer, table, top_k: int = 5
+    query: str, model: SentenceTransformer, table, owner_id: str, top_k: int = 5
 ) -> list[dict]:
 
     if not query.strip():
@@ -16,10 +18,21 @@ def dense_search(
     if top_k <= 0:
         raise ValueError("top_k must be greater than zero")
 
+    if not owner_id:
+        raise ValueError("owner_id is required")
+
+    owner_id = str(UUID(owner_id))
+
     query_embedding = embed_query(query, model)
     query_embedding = normalize_embeddings(query_embedding.reshape(1, -1))
 
-    results = table.search(query_embedding[0]).metric("cosine").limit(top_k).to_list()
+    results = (
+        table.search(query_embedding[0])
+        .where(f"owner_id = '{owner_id}'", prefilter=True)
+        .metric("cosine")
+        .limit(top_k)
+        .to_list()
+    )
 
     for result in results:
         distance = result.pop("_distance", None)

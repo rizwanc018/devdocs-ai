@@ -34,14 +34,17 @@ def normalize_query(query: str) -> str:
     return " ".join(query.casefold().split())
 
 
-def ask_question(query: str):
+def ask_question(query: str, owner_id: str):
     if not query.strip():
         raise ValueError("Query cannot be empty")
+    if not owner_id:
+        raise ValueError("owner_id is required")
 
     with tracer.start_as_current_span("rag_request") as span:
         span.set_attribute("input.value", query)
+        span.set_attribute("user.id", owner_id)
 
-        cache_key = normalize_query(query)
+        cache_key = f"{owner_id}:{normalize_query(query)}"
 
         with tracer.start_as_current_span("cache_lookup") as cache_span:
             cached_result = query_cache.get(cache_key)
@@ -50,10 +53,9 @@ def ask_question(query: str):
         if cache_hit:
             span.set_attribute("rag.cache_status", "hit")
             span.set_attribute("output.value", cached_result["answer"])
-            print("Cache HIT")
+            # print("Cache HIT")
             return cached_result
-
-        print("Cache MISS")
+        # print("Cache MISS")
         span.set_attribute("rag.cache_status", "miss")
 
         try:
@@ -62,6 +64,7 @@ def ask_question(query: str):
                 model=embedding_model,
                 table=table,
                 bm25=bm25,
+                owner_id=owner_id,
                 reranker=reranker,
                 top_k=5,
                 dense_candidates=15,

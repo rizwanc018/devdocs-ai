@@ -1,3 +1,4 @@
+import bm25s
 from opentelemetry import trace
 
 from devdocs_ai.retrieval.hybrid import hybrid_retriever
@@ -10,7 +11,8 @@ def reranked_retriever(
     query: str,
     model,
     table,
-    bm25,
+    bm25: bm25s.BM25,
+    owner_id: str,
     reranker,
     top_k: int = 5,
     dense_candidates: int = 20,
@@ -24,6 +26,7 @@ def reranked_retriever(
         model=model,
         table=table,
         bm25=bm25,
+        owner_id=owner_id,
         top_k=dense_candidates + bm25_candidates,
         dense_candidates=dense_candidates,
         bm25_candidates=bm25_candidates,

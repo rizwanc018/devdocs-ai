@@ -1,31 +1,37 @@
-from devdocs_ai.retrieval.bm25_retriever import bm25_retriever
+from devdocs_ai.auth.database import get_connection
+from devdocs_ai.retrieval.bm25 import (
+    bm25_retriever,
+    load_bm25_index,
+)
 
-from devdocs_ai.retrieval.bm25 import load_bm25_index
+with get_connection() as connection:
+    user = connection.execute("SELECT id FROM users LIMIT 1").fetchone()
 
+owner_id = user["id"]
+retriever = load_bm25_index()
 
-def main():
-    retriever = load_bm25_index()
+query = "How can I define query parameters in FastAPI?"
+owner_results = bm25_retriever(
+    query=query,
+    retriever=retriever,
+    owner_id=owner_id,
+    top_k=5,
+)
 
-    query = "How can I define query parameters in FastAPI?"
+assert owner_results, "Owner should retrieve their documents."
+assert all(chunk["owner_id"] == owner_id for chunk in owner_results)
 
-    results = bm25_retriever(
-        query=query,
-        retriever=retriever,
-        top_k=5,
-    )
+print("Owner BM25 retrieval passed!")
 
-    print(f"\nQuery: {query}")
-    print(f"Retrieved chunks: {len(results)}")
+other_user_id = "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
+other_results = bm25_retriever(
+    query=query,
+    retriever=retriever,
+    owner_id=other_user_id,
+    top_k=5,
+)
 
-    for rank, chunk in enumerate(results, start=1):
-        print("\n" + "=" * 70)
-        print(f"Rank: {rank}")
-        print(f"Chunk ID: {chunk['chunk_id']}")
-        print(f"Source: {chunk['source']}")
-        print(f"Page: {chunk['page_start']}")
-        print(f"BM25 Score: {chunk['bm25_score']:.4f}")
-        print(f"Text: {chunk['text']}")
+assert len(other_results) == 0
 
-
-if __name__ == "__main__":
-    main()
+print("Cross-user BM25 isolation passed!")
+print("All BM25 authorization tests passed!")

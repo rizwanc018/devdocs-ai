@@ -1,4 +1,5 @@
 import bm25s
+import numpy as np
 
 from devdocs_ai.config.path import BM25_INDEXES_DIR
 
@@ -12,7 +13,13 @@ def build_bm25_index(chunks: list[dict]):
     for chunk in chunks:
         owner_id = chunk.get("owner_id")
 
-        if not isinstance(owner_id, str) or not owner_id.strip():
+        if not isinstance(owner_id, str):
+            raise TypeError(
+                f"Chunk {chunk.get('chunk_id')} owner_id must be a string, "
+                f"got {type(owner_id).__name__}."
+            )
+
+        if not owner_id.strip():
             raise ValueError(f"Chunk {chunk.get('chunk_id')} has no valid owner_id.")
 
         texts.append(chunk["text"])
@@ -37,16 +44,36 @@ def load_bm25_index():
     )
 
 
-def bm25_retriever(query: str, retriever: bm25s.BM25, top_k: int = 5) -> list[dict]:
+def bm25_retriever(
+    query: str, retriever: bm25s.BM25, owner_id: str, top_k: int = 5
+) -> list[dict]:
     if not query.strip():
         raise ValueError("Query cannot be empty.")
 
     if top_k <= 0:
         raise ValueError("top_k must be greater than zero.")
 
-    query_tokens = bm25s.tokenize(query, stopwords="en")
+    if not owner_id:
+        raise ValueError("owner id is required.")
 
-    results, scores = retriever.retrieve(query_tokens, k=top_k)
+    # Loading corpus because ownership is stored in its records.
+    corpus = retriever.corpus
+
+    if corpus is None:
+        raise ValueError("BM25 corpus must be loaded.")
+
+    for chunk in corpus:
+        weight_mask = np.array(
+            [chunk["owner_id"] == owner_id for chunk in corpus], dtype=np.float32
+        )
+
+    if not np.any(weight_mask):
+        return []
+
+    query_tokens = bm25s.tokenize(query, stopwords="en")
+    k = min(top_k, len(corpus))
+
+    results, scores = retriever.retrieve(query_tokens, k=k, weight_mask=weight_mask)
 
     retrieved_chunks = []
 
