@@ -42,6 +42,9 @@ def reranked_retriever(
             "rag.input_rrf_scores", [float(chunk["rrf_score"]) for chunk in candidates]
         )
 
+        if not candidates:
+            return []
+
         results = rerank_results(
             query=query,
             chunks=candidates,

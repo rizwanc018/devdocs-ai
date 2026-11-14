@@ -50,6 +50,9 @@ def hybrid_retriever(
             [chunk["chunk_id"] for chunk in bm25_results],
         )
 
+    if not dense_results and not bm25_results:
+        return []
+
     candidate_count = len(dense_results) + len(bm25_results)
 
     with tracer.start_as_current_span("rrf_fusion") as span:
