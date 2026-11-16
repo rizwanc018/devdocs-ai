@@ -1,7 +1,7 @@
 [project]
 name = "devdocs-ai"
 version = "0.1.0"
-description = "Add your description here"
+description = "RAG system for developer documentation: hybrid retrieval (dense + BM25 with RRF), reranking, metadata filtering, per-user access control, and Phoenix observability."
 readme = "README.md"
 authors = [
     { name = "rizwanc018", email = "rizwanc018@gmail.com" }
