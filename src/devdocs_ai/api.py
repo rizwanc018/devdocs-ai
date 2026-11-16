@@ -7,13 +7,18 @@ load_dotenv()
 
 from devdocs_ai.auth.database import initialize_database
 from devdocs_ai.auth.routes import router as auth_router
+from devdocs_ai.observability.tracing import setup_tracing
 from devdocs_ai.rag_routes import router as rag_router
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     initialize_database()
-    yield
+    tracer_provider = setup_tracing()
+    try:
+        yield
+    finally:
+        tracer_provider.shutdown()
 
 
 app = FastAPI(

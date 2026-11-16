@@ -13,6 +13,8 @@ from devdocs_ai.retrieval.reranked_retrieval import reranked_retriever
 from devdocs_ai.retrieval.reranker import load_reranker
 from devdocs_ai.retrieval.vector_store import TABLE_NAME, connect_to_db
 
+tracer = trace.get_tracer(__name__)
+
 embedding_model = load_embedding_model()
 reranker = load_reranker()
 
@@ -27,7 +29,6 @@ query_cache = QueryCache(
     max_size=100,
     ttl_seconds=3600,
 )
-tracer = trace.get_tracer(__name__)
 
 
 def normalize_query(query: str) -> str:
