@@ -1,3 +1,4 @@
+[Screencast From 2026-11-20 14-17-37.webm](https://github.com/user-attachments/assets/b4b4689a-261e-4aaf-a47b-61e834f0fab9)
 # DevDocs AI
 
 A production-grade **Retrieval-Augmented Generation (RAG)** system for querying developer
