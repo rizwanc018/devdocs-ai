@@ -53,7 +53,21 @@ cp .env.example .env   # then fill in the values
 
 ## Usage
 
-### 1. Ingest documents
+### 1. View traces in Phoenix
+
+The app exports OpenTelemetry traces to [Arize Phoenix](https://github.com/Arize-ai/phoenix).
+Start a local Phoenix server (it's already installed via `uv sync`):
+
+```bash
+uv run phoenix serve
+```
+
+This launches the Phoenix UI at `http://localhost:6006`, which also receives OTLP traces
+at `http://localhost:6006/v1/traces` — the default `PHOENIX_COLLECTOR_ENDPOINT`.
+
+> To send traces to a different collector, set `PHOENIX_COLLECTOR_ENDPOINT` in your `.env`.
+
+### 2. Ingest documents
 
 Place PDFs in the raw data directory (`data/raw/`), then run the ingestion pipeline (owner-scoped):
 
@@ -66,7 +80,7 @@ uv run python scripts/save_embeddings.py
 uv run python scripts/build_bm25_index.py
 ```
 
-### 2. Run the API
+### 3. Run the API
 
 ```bash
 uv run uvicorn devdocs_ai.api:app --reload
